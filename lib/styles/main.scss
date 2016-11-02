@@ -1,10 +1,54 @@
-/* ---- modules ---- */
-@import "modules/colors";
-@import "modules/mixins";
-@import "modules/variables";
-
-/* ---- partials ---- */
 @import "partials/reset";
-@import "partials/typography";
 
-/* ---- Layouts ---- */
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    height: 100%;
+    font-family: sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+  margin-bottom: 40px;
+}
+
+p, button, input {
+  margin: 5px;
+}
+
+p {
+  font-size: 18px;
+}
+
+p.numberGuess {
+  font-size: 50px;
+}
+
+input {
+  height: 40px;
+  border-radius: 6px;
+  width: 360px;
+  font-size: 18px;
+  padding-left: 10px;
+}
+
+button {
+  width: 180px;
+  height: 40px;
+  padding: 0;
+  border-radius: 6px;
+  background: linear-gradient(#D5D5D5, #B5B5B5);
+  font-size: 18px;
+  color: #4A4A4A;
+  border-style: solid;
+}
+
+button:focus {outline:0;}
+
+button:disabled, button:active {
+  background: linear-gradient(#F0F0F0, #D6D6D6);
+  color: #a1a1a1;
+}
