@@ -21,6 +21,7 @@ p, button, input {
 
 p {
   font-size: 18px;
+  display: inline;
 }
 
 p.numberGuess {
@@ -51,4 +52,15 @@ button:focus {outline:0;}
 button:disabled, button:active {
   background: linear-gradient(#F0F0F0, #D6D6D6);
   color: #a1a1a1;
+}
+
+.easter-egg {
+    width: 50px;
+    height: inherit;
+    padding: 0;
+    border: none;
+}
+
+.spacing-fix {
+  margin-left: -22px;
 }

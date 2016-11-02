@@ -17,6 +17,8 @@ export default class Application extends Component {
     this.clearButtonClick = this.clearButtonClick.bind(this)
     this.resetButtonClick = this.resetButtonClick.bind(this)
     this.inputFieldChange = this.inputFieldChange.bind(this)
+    this.setMinGuess = this.setMinGuess.bind(this)
+    this.setMaxGuess = this.setMaxGuess.bind(this)
   }
   componentDidMount() {
     this.setApplicationHeight()
@@ -57,12 +59,30 @@ export default class Application extends Component {
   inputFieldChange(e) {
     this.setState({ textInputValue: e.target.value })
   }
+  returnEasterEgg() {
+    const { minGuess, maxGuess } = this.state
+    return (
+      <div>
+        <p>Guess a number between</p>
+        <input type="number" className="easter-egg" value={minGuess} onChange={this.setMinGuess}></input>
+        <p className="spacing-fix">and</p>
+        <input type="number" className="easter-egg" value={maxGuess} onChange={this.setMaxGuess}></input>
+      </div>
+    )
+  }
+  setMinGuess(e) {
+    this.setState({ minGuess: e.target.value })
+    this.generateRandomNumber()
+  }
+  setMaxGuess(e) {
+    this.setState({ maxGuess: e.target.value })
+    this.generateRandomNumber()
+  }
   render() {
     const { textInputValue, randomNumber, minGuess, maxGuess } = this.state
 
     const currentGuess = this.state.currentGuess ? parseInt(this.state.currentGuess, 10) : ''
 
-    console.log('currentGuess', currentGuess)
     console.log('randomNumber', randomNumber)
 
     let textLine1 = ''
@@ -77,18 +97,20 @@ export default class Application extends Component {
       textLine2 = 'Woohoo! You guessed the number!'
     }
     if (!currentGuess) {
-      textLine1 = `Guess a number between ${minGuess} and ${maxGuess}`
+      textLine1 = ''
       textLine2 = ''
     }
 
-    const guessButtonDisabled = textInputValue === ''
-    const clearButtonDisabled = textInputValue === ''
-    const resetButtonDisabled = textLine2 === ''
+    const guessButtonDisabled = !textInputValue
+    const clearButtonDisabled = !textInputValue
+    const resetButtonDisabled = !textLine2
+
+    const easterEgg = this.returnEasterEgg()
 
     return (
       <main>
         <h1>Number Guesser in React</h1>
-        <TextLine text={textLine1} />
+        {!currentGuess ? easterEgg : <TextLine text={textLine1} />}
         <TextLine cl='numberGuess' text={currentGuess} />
         <TextLine text={textLine2} />
         <form>
