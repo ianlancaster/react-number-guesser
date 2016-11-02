@@ -10,9 +10,9 @@ export default class Application extends Component {
       textLine1: 'Guess a number between 1 and 100',
       currentGuess: '',
       textLine2: '',
-      guessButtonDisabled: 'false',
-      clearButtonDisabled: 'true',
-      resetButtonDisabled: 'true',
+      textInputValue: '',
+      maxGuess: 100,
+      minGuess: 0,
     }
     this.guessButtonClick = this.guessButtonClick.bind(this)
     this.clearButtonClick = this.clearButtonClick.bind(this)
@@ -21,6 +21,7 @@ export default class Application extends Component {
   }
   componentDidMount() {
     this.setApplicationHeight()
+    this.generateRandomNumber()
   }
   setApplicationHeight() {
     const application = document.getElementById('application')
@@ -29,25 +30,49 @@ export default class Application extends Component {
       application.style.height = `${window.innerHeight}px`
     }
   }
+  generateRandomNumber() {
+    const { maxGuess, minGuess } = this.state
+    const randomNumber = Math.round(Math.random() * (maxGuess - minGuess)) + minGuess
+    this.setState({ randomNumber })
+  }
+  setButtonDisabled() {
+    this.setGuessButtonDisabled()
+    this.setClearButtonDisabled()
+    this.setResetButtonDisabled()
+  }
+  setGuessButtonDisabled() {
+    return this.state.textInputValue === ''
+  }
+  setClearButtonDisabled() {
+    return true
+  }
+  setResetButtonDisabled() {
+    return true
+  }
   guessButtonClick() {
-    console.log('ping')
+    // console.log('ping')
   }
   clearButtonClick() {
-    console.log('ping')
+    // console.log('ping')
   }
   resetButtonClick() {
-    console.log('ping')
+    // console.log('ping')
   }
-  inputFieldKeyup() {
-    console.log('ping')
+  inputFieldKeyup(e) {
+    this.setState({ textInputValue: e.target.value })
+    this.setButtonDisabled()
   }
   render() {
     const { textLine1,
             currentGuess,
             textLine2,
-            guessButtonDisabled,
-            clearButtonDisabled,
-            resetButtonDisabled } = this.state
+            textInputValue } = this.state
+
+    const guessButtonDisabled = this.setGuessButtonDisabled()
+    const clearButtonDisabled = this.setClearButtonDisabled()
+    const resetButtonDisabled = this.setResetButtonDisabled()
+
+    console.log(this.state.randomNumber)
 
     return (
       <main>
@@ -56,7 +81,7 @@ export default class Application extends Component {
         <TextLine cl='numberGuess' text={currentGuess} />
         <TextLine text={textLine2} />
         <form>
-          <TextInput placeholder='Your best guess' keyup={this.inputFieldKeyup}/>
+          <TextInput placeholder='Your best guess' value={textInputValue} keyup={this.inputFieldKeyup}/>
           <section>
             <Button text='Guess' disabled={guessButtonDisabled} click={this.guessButtonClick} />
             <Button text='Clear' disabled={clearButtonDisabled} click={this.clearButtonClick} />
