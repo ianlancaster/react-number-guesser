@@ -44,11 +44,12 @@ export default class Application extends Component {
     this.setState({ textInputValue: '' })
   }
   resetButtonClick() {
+    const { randomNumber, currentGuess, minGuess, maxGuess } = this.state
     this.setState({
       currentGuess: null,
       textInputValue: '',
-      maxGuess: 100,
-      minGuess: 0,
+      maxGuess: randomNumber == currentGuess ? maxGuess + 10 : maxGuess, // eslint-disable-line
+      minGuess: randomNumber == currentGuess ? minGuess - 10 : minGuess, // eslint-disable-line
       randomNumber: undefined,
     })
     this.generateRandomNumber()
@@ -57,7 +58,7 @@ export default class Application extends Component {
     this.setState({ textInputValue: e.target.value })
   }
   render() {
-    const { textInputValue, randomNumber } = this.state
+    const { textInputValue, randomNumber, minGuess, maxGuess } = this.state
 
     const currentGuess = this.state.currentGuess ? parseInt(this.state.currentGuess, 10) : ''
 
@@ -68,20 +69,21 @@ export default class Application extends Component {
     let textLine2 = ''
     if (currentGuess > randomNumber) { textLine2 = 'That number is too high. Guess Again.' }
     if (currentGuess < randomNumber) { textLine2 = 'That number is too low. Guess Again.' }
+    if (currentGuess > maxGuess || currentGuess < minGuess) { textLine2 = 'That guess is outside of the range of values. Try again.' }
+    if (isNaN(currentGuess)) { textLine2 = 'That is not a number. Try Again' }
     if (currentGuess) { textLine1 = 'Your last guess was...' }
     if (currentGuess === randomNumber) {
       textLine1 = ''
       textLine2 = 'Woohoo! You guessed the number!'
     }
     if (!currentGuess) {
-      textLine1 = 'Guess a number between 1 and 100'
+      textLine1 = `Guess a number between ${minGuess} and ${maxGuess}`
       textLine2 = ''
     }
 
     const guessButtonDisabled = textInputValue === ''
     const clearButtonDisabled = textInputValue === ''
     const resetButtonDisabled = textLine2 === ''
-
 
     return (
       <main>
@@ -90,7 +92,11 @@ export default class Application extends Component {
         <TextLine cl='numberGuess' text={currentGuess} />
         <TextLine text={textLine2} />
         <form>
-          <TextInput placeholder='Your best guess' value={textInputValue} change={this.inputFieldChange}/>
+          <TextInput placeholder='Your best guess'
+                     value={textInputValue}
+                     min={minGuess}
+                     max={maxGuess}
+                     change={this.inputFieldChange}/>
           <section>
             <Button text='Guess' disabled={guessButtonDisabled} click={this.guessButtonClick} />
             <Button text='Clear' disabled={clearButtonDisabled} click={this.clearButtonClick} />

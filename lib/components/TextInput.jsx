@@ -8,9 +8,11 @@ export default class TextInput extends React.Component {
     }
   }
   render() {
-    const { placeholder, cl, text, change, value } = this.props
+    const { placeholder, cl, text, change, value, min, max } = this.props
     return (
-      <input type='text'
+      <input type='number'
+             min={min}
+             max={max}
              placeholder={placeholder}
              className={cl}
              onChange={change}
