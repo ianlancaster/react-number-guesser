@@ -7,17 +7,16 @@ export default class Application extends Component {
   constructor() {
     super()
     this.state = {
-      textLine1: 'Guess a number between 1 and 100',
-      currentGuess: '',
-      textLine2: '',
+      currentGuess: null,
       textInputValue: '',
       maxGuess: 100,
       minGuess: 0,
+      randomNumber: undefined,
     }
     this.guessButtonClick = this.guessButtonClick.bind(this)
     this.clearButtonClick = this.clearButtonClick.bind(this)
     this.resetButtonClick = this.resetButtonClick.bind(this)
-    this.inputFieldKeyup = this.inputFieldKeyup.bind(this)
+    this.inputFieldChange = this.inputFieldChange.bind(this)
   }
   componentDidMount() {
     this.setApplicationHeight()
@@ -35,44 +34,54 @@ export default class Application extends Component {
     const randomNumber = Math.round(Math.random() * (maxGuess - minGuess)) + minGuess
     this.setState({ randomNumber })
   }
-  setButtonDisabled() {
-    this.setGuessButtonDisabled()
-    this.setClearButtonDisabled()
-    this.setResetButtonDisabled()
-  }
-  setGuessButtonDisabled() {
-    return this.state.textInputValue === ''
-  }
-  setClearButtonDisabled() {
-    return true
-  }
-  setResetButtonDisabled() {
-    return true
-  }
   guessButtonClick() {
-    // console.log('ping')
+    this.setState({
+      currentGuess: this.state.textInputValue,
+    })
+    this.clearButtonClick()
   }
   clearButtonClick() {
-    // console.log('ping')
+    this.setState({ textInputValue: '' })
   }
   resetButtonClick() {
-    // console.log('ping')
+    this.setState({
+      currentGuess: null,
+      textInputValue: '',
+      maxGuess: 100,
+      minGuess: 0,
+      randomNumber: undefined,
+    })
+    this.generateRandomNumber()
   }
-  inputFieldKeyup(e) {
+  inputFieldChange(e) {
     this.setState({ textInputValue: e.target.value })
-    this.setButtonDisabled()
   }
   render() {
-    const { textLine1,
-            currentGuess,
-            textLine2,
-            textInputValue } = this.state
+    const { textInputValue, randomNumber } = this.state
 
-    const guessButtonDisabled = this.setGuessButtonDisabled()
-    const clearButtonDisabled = this.setClearButtonDisabled()
-    const resetButtonDisabled = this.setResetButtonDisabled()
+    const currentGuess = this.state.currentGuess ? parseInt(this.state.currentGuess, 10) : ''
 
-    console.log(this.state.randomNumber)
+    console.log('currentGuess', currentGuess)
+    console.log('randomNumber', randomNumber)
+
+    let textLine1 = ''
+    let textLine2 = ''
+    if (currentGuess > randomNumber) { textLine2 = 'That number is too high. Guess Again.' }
+    if (currentGuess < randomNumber) { textLine2 = 'That number is too low. Guess Again.' }
+    if (currentGuess) { textLine1 = 'Your last guess was...' }
+    if (currentGuess === randomNumber) {
+      textLine1 = ''
+      textLine2 = 'Woohoo! You guessed the number!'
+    }
+    if (!currentGuess) {
+      textLine1 = 'Guess a number between 1 and 100'
+      textLine2 = ''
+    }
+
+    const guessButtonDisabled = textInputValue === ''
+    const clearButtonDisabled = textInputValue === ''
+    const resetButtonDisabled = textLine2 === ''
+
 
     return (
       <main>
@@ -81,7 +90,7 @@ export default class Application extends Component {
         <TextLine cl='numberGuess' text={currentGuess} />
         <TextLine text={textLine2} />
         <form>
-          <TextInput placeholder='Your best guess' value={textInputValue} keyup={this.inputFieldKeyup}/>
+          <TextInput placeholder='Your best guess' value={textInputValue} change={this.inputFieldChange}/>
           <section>
             <Button text='Guess' disabled={guessButtonDisabled} click={this.guessButtonClick} />
             <Button text='Clear' disabled={clearButtonDisabled} click={this.clearButtonClick} />

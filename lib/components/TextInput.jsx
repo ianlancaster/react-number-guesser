@@ -1,15 +1,20 @@
 import React from 'react'
 
 export default class TextInput extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      value: undefined,
+    }
+  }
   render() {
-    const { placeholder, cl, text, keyup, textInputValue } = this.props
-
+    const { placeholder, cl, text, change, value } = this.props
     return (
       <input type='text'
              placeholder={placeholder}
              className={cl}
-             onKeyUp={keyup}
-             value={textInputValue}>{text}</input>
+             onChange={change}
+             value={value}>{text}</input>
     )
   }
 }
